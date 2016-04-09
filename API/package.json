@@ -35,7 +35,8 @@
       "platform": "ios",
       "version": "",
       "locator": "ios"
-    }
+    },
+    "android"
   ],
   "name": "api",
   "description": "API: An Ionic project"
