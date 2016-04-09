@@ -1,0 +1,25 @@
+<ion-navbar *navbar>
+    <ion-title>
+        Home
+    </ion-title>
+</ion-navbar>
+<ion-content class="home">
+    <ion-card>
+        <ion-card-header>
+            Venues
+        </ion-card-header>
+        <ion-card-content>
+            Search: <input type="text" [(ngModel)]="searchTerm" />
+            <table *ngIf="venues">
+                <tr><th>ID</th><th>Name</th><th>lat</th><th>lng</th></tr>
+                <tr class="venue" *ngFor="#venue of venues | filter:searchTerm" (click)="itemTapped(venue)">
+                    <td>{{venue.id}}</td>
+                    <td>{{venue.name}}</td>
+                    <td>{{venue.lat}}</td>
+                    <td>{{venue.lng}}</td>
+                </tr>
+            </table>
+         
+        </ion-card-content>
+    </ion-card>
+</ion-content>
