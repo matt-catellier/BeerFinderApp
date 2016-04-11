@@ -1,5 +1,6 @@
 import {Component}   from 'angular2/core';
 import {Http, HTTP_PROVIDERS} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
 
 interface venueInfo {
     id:string; 
@@ -14,6 +15,8 @@ interface venueInfo {
 })
 // This is the service.
 export class FourSquareAPI {
+    client_id : string = "3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM";
+    fs_secret : string = "UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327";
     public http:Http;
     public FS:string;
     public venues:venueInfo[];
@@ -29,7 +32,6 @@ export class FourSquareAPI {
         .map(res => res.json())
         .subscribe(
             result => {
-                var x = 5;
                 console.log(result);
                 var venueResults = result.response.venues;
                 for(var i = 0; i < venueResults.length; i++) {
@@ -49,5 +51,14 @@ export class FourSquareAPI {
     
     getVenues() {
         return this.venues;
+    }
+    
+    getVenues2() {
+        return this.http.get(this.FS).map(res => res.json());       
+    }
+    
+    getVenues3(lat, lng) {
+        var URL = "https://api.foursquare.com/v2/venues/search?categoryId=4d4b7104d754a06370d81259&ll=" + lat + "," + lng+ "&client_id=3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM&client_secret=UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327"
+        return this.http.get(URL).map(res => res.json());       
     }
 }

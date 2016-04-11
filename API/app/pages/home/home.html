@@ -6,20 +6,15 @@
 <ion-content class="home">
     <ion-card>
         <ion-card-header>
-            Venues
+            Venues <span> Search: <input type="text" [(ngModel)]="searchTerm" /> </span>
         </ion-card-header>
         <ion-card-content>
-            Search: <input type="text" [(ngModel)]="searchTerm" />
-            <table *ngIf="venues">
-                <tr><th>ID</th><th>Name</th><th>lat</th><th>lng</th></tr>
-                <tr class="venue" *ngFor="#venue of venues | filter:searchTerm" (click)="itemTapped(venue)">
-                    <td>{{venue.id}}</td>
-                    <td>{{venue.name}}</td>
-                    <td>{{venue.lat}}</td>
-                    <td>{{venue.lng}}</td>
-                </tr>
-            </table>
-         
+            
+            <ion-list *ngIf="venues">
+                <ion-item class="venue" *ngFor="#venue of venues | filter:searchTerm" (click)="itemTapped(venue)">
+                    <span>{{venue.name}}</span>
+                </ion-item>
+            </ion-list>   
         </ion-card-content>
     </ion-card>
 </ion-content>
