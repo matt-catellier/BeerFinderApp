@@ -79,35 +79,66 @@ export class HomePage {
            return 0; 
         });
     } 
-    // this is not working properly
-    locationClosest() {
-        let currentPos = new google.maps.LatLng(this.lat, this.lng);
-        this.venues = this.venues.sort(function(a,b) {
-       
-            var aPos = new google.maps.LatLng(a.lat, a.lng);
-            var bPos = new google.maps.LatLng(b.lat, b.lng);
+    
+    locationClosest2() {
+        var lat = this.lat;
+        var lng = this.lng;
+        for(var i = 0; i < this.venues.length; i ++) {
             
-            var aDiff = calculateDistance(currentPos, aPos);
-            var bDiff = calculateDistance(currentPos, bPos);
-            console.log();
-            console.log("---------");
-            console.log(a.name + " - " + aDiff + ", " + b.name + " - " + bDiff);
-                       
-            if(aDiff > bDiff) {
-                console.log(a.name + " FARTHER");
-                return 1;
-            }
-            if(aDiff < bDiff) {
-                console.log( b.name + " FARTHER");
-                return -1;
-            }
-            return 0; 
-            });
+            this.venues = this.venues.sort(function(a,b) {   
+                // doesnt know this inhere?    
+                // userLat, locationLat, userLng, locationLng    
+                var aDiff = getDistance(lat, a.lat, lng, a.lng);
+                var bDiff = getDistance(lat, b.lat, lng, b.lng);
+                         
+                if(aDiff > bDiff) {
+                    return 1;
+                }
+                if(aDiff < bDiff) {
+                    return -1;
+                }
+                return 0; 
+                });
+        }
     }  
-    
-    
+          
 }
+
+// using GEOMETRIC DISTANCES
+function locationClosest() {
+    let currentPos = new google.maps.LatLng(this.lat, this.lng);
+    this.venues = this.venues.sort(function(a,b) {
+    
+        var aPos = new google.maps.LatLng(a.lat, a.lng);
+        var bPos = new google.maps.LatLng(b.lat, b.lng);
+        
+        var aDiff = calculateDistance(currentPos, aPos);
+        var bDiff = calculateDistance(currentPos, bPos);
+        console.log();
+        console.log("---------");
+        console.log(a.name + " - " + aDiff + ", " + b.name + " - " + bDiff);
+                    
+        if(aDiff > bDiff) {
+            console.log(a.name + " FARTHER");
+            return 1;
+        }
+        if(aDiff < bDiff) {
+            console.log( b.name + " FARTHER");
+            return -1;
+        }
+        return 0; 
+        });
+}  
 //calculates distance between two points in km's
 function calculateDistance(p1, p2) {
     return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
 }
+
+
+//Calculate the shortest distance based on lat and long
+function getDistance(lat1, lat2, lon1, lon2){
+    var R = 6371; //KM
+    var d = Math.acos(Math.sin(lat1) * Math.sin(lat2) +
+            Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1)) * R
+        return d    
+};
