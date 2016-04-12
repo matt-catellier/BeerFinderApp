@@ -3,6 +3,7 @@ import {Injectable, Pipe, PipeTransform} from 'angular2/core';
 @Pipe({
     name: 'filter'
 })
+
 @Injectable()
 export class FilterPipe implements PipeTransform {
     transform(value, args) {
@@ -11,10 +12,13 @@ export class FilterPipe implements PipeTransform {
     } else if (value) {
       return value.filter(item => {
         for (let key in item) {
-          if ((typeof item[key] === 'string' || item[key] instanceof String) && 
-              (item[key].indexOf(args[0]) !== -1)) {
-            return true;
-          }
+            if ((typeof item[key] === 'string' || item[key] instanceof String) 
+                    && (item[key].indexOf(args[0]) !== -1)) {
+                    return true;
+            } else if((typeof item[key] === 'string' || item[key] instanceof String) 
+                    && (item[key].toLowerCase().indexOf(args[0].toLowerCase()) !== -1)) {
+                    return true;
+            }
         }
       });
     }

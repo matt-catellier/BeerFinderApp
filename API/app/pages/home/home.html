@@ -7,12 +7,15 @@
     <ion-card>
         <ion-card-header>
             Venues <span> Search: <input type="text" [(ngModel)]="searchTerm" /> </span>
+            <button (click)="alphaASC()">A-Z</button>
+            <button (click)="alphaDESC()">Z-A</button>
+            <button (click)="locationClosest()">Closest</button>
         </ion-card-header>
-        <ion-card-content>
-            
+        <ion-card-content>          
             <ion-list *ngIf="venues">
                 <ion-item class="venue" *ngFor="#venue of venues | filter:searchTerm" (click)="itemTapped(venue)">
-                    <span>{{venue.name}}</span>
+                    <span>{{venue.name}}</span> <b> {{venue.category}}</b>  <span *ngIf="venue.specials"> + </span><br/>
+                    <span>{{venue.address}}</span> <span> {{venue.formattedPhone}}</span>
                 </ion-item>
             </ion-list>   
         </ion-card-content>

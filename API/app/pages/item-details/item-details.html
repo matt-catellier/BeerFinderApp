@@ -1,12 +1,21 @@
 <ion-navbar *navbar>
     <button menuToggle *ngIf="!selectedItem">
-        <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Item Details</ion-title>
 </ion-navbar>
 
-<ion-content padding>
-    <div *ngIf="selectedItem" class="selection">
-        <b>{{selectedItem.name}}</b>
-    </div>   
+<ion-content padding class="selection">
+    <ion-card *ngIf="venue">
+        <ion-card-header>
+            {{venue.name}} <b> {{venue.category}}</b>
+        </ion-card-header>
+        <ion-card-content>          
+            <ion-list *ngIf="venue">
+                <ion-item class="venue">
+                    <span *ngIf="venue.specials"> + </span><br/>
+                    <span>{{venue.address}}</span> <span> {{venue.formattedPhone}}</span>
+                </ion-item>
+            </ion-list>   
+        </ion-card-content>
+    </ion-card>
 </ion-content>

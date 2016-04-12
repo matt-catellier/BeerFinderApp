@@ -1,6 +1,7 @@
 import {Component}   from 'angular2/core';
 import {Http, HTTP_PROVIDERS} from 'angular2/http';
 import {Observable} from 'rxjs/Rx';
+import { Photo } from './../models/Photo';
 
 interface venueInfo {
     id:string; 
@@ -15,50 +16,52 @@ interface venueInfo {
 })
 // This is the service.
 export class FourSquareAPI {
+    // API info
     client_id : string = "3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM";
     fs_secret : string = "UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327";
+    // urls / endpoints
+    searchURL : string = "https://api.foursquare.com/v2/venues/search";
+    trendingURL : string = "https://api.foursquare.com/v2/venues/trending";
+    exploreURL : string = "https://api.foursquare.com/v2/venues/explore";   
+    venuesURL : string =  "https://api.foursquare.com/v2/venues";
+    // category IDS
+    breweriesID : string = "50327c8591d4c4b30a586d5d";
+    
     public http:Http;
-    public FS:string;
     public venues:venueInfo[];
+    
     constructor(http: Http) {
         this.http=http;
-        this.FS = "https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM&client_secret=UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327"
         this.venues = [];
-        this.callVenues();
     }
-    
-    callVenues() {
-        this.http.get(this.FS)
-        .map(res => res.json())
-        .subscribe(
-            result => {
-                console.log(result);
-                var venueResults = result.response.venues;
-                for(var i = 0; i < venueResults.length; i++) {
-                    var venue: venueInfo = {
-                        id: venueResults[i].id,
-                        name: venueResults[i].name,
-                        crossStreet: venueResults[i].location.crossStreet,
-                        lat: venueResults[i].location.lat,
-                        lng: venueResults[i].location.lng,                        
-                    }             
-                    this.venues.push(venue);            
-                }
-                console.log(this.venues);
-             }
-         );	   
-    }
-    
-    getVenues() {
-        return this.venues;
-    }
-    
-    getVenues2() {
-        return this.http.get(this.FS).map(res => res.json());       
-    }
-    
-    getVenues3(lat, lng) {
-        var URL = "https://api.foursquare.com/v2/venues/search?categoryId=4d4b7104d754a06370d81259&ll=" + lat + "," + lng+ "&client_id=3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM&client_secret=UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327"
+    //  var URL = this.searchURL + "?categoryId=" + this.breweriesID + " &ll=" + lat + "," + lng + 
+    //                 + "&client_id=" + this.client_id + "&client_secret=" + this.client_secret + "&v=" + this.version;
+    searchLocalBreweries(lat, lng) {
+        // parse results like this
+        // var venueResults = result.response.venues;
+        var URL = "https://api.foursquare.com/v2/venues/search?categoryId=50327c8591d4c4b30a586d5d&ll=" + lat + "," + lng+ "&client_id=3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM&client_secret=UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327"
         return this.http.get(URL).map(res => res.json());       
+    }
+    
+    exploreLocalBreweries(lat, lng) {
+        // parse results like this
+        // var venueResults = result.response.groups[0].items;
+        var URL = "https://api.foursquare.com/v2/venues/explore?categoryId=50327c8591d4c4b30a586d5d&ll=" + lat + "," + lng+ "&client_id=3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM&client_secret=UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327"
+        return this.http.get(URL).map(res => res.json());       
+    }
+    
+    getBreweryPhotos(id) : any {
+        // i.e.
+        // https://api.foursquare.com/v2/venues/4aa83aacf964a520405020e3/photos
+        var URL = this.venuesURL + "/" + id + "/photos?client_id=3SJALTSRALGWUIR3DXB4YM5TGQEOF4Q1DAS4U2GWZ50PFLSM&client_secret=UFONVH33KCQO4U4C2NI5DR02WLJBVMJ2EWNKHDD0Q5MITTOL&v=20160327";
+        this.http.get(URL).map(res => res.json()).subscribe(
+            result => {
+                if(result.response.photos.count > 0) {
+                        var photos = result.response.photos.items;
+                        var photo = new Photo(photos[0]);
+                        console.log(photo);
+                        return photo;
+                }                   
+        });
     }
 }

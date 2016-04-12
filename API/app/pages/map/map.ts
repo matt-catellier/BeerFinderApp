@@ -1,7 +1,7 @@
 /// <reference path="./google.maps.d.ts" />
 import {Page, NavController} from 'ionic-angular';
 import { FourSquareAPI } from './../../services/FourSquareAPI';
-import { VenueInfo } from './../../models/VenueInfo';
+import { Venue } from './../../models/Venue';
 
 @Page({
   providers: [FourSquareAPI],
@@ -10,7 +10,7 @@ import { VenueInfo } from './../../models/VenueInfo';
 
 export class MapPage { 
   public API:FourSquareAPI
-  public venues : VenueInfo[];
+  public venues : Venue[];
   public map: any;
   public lat: any;
   public lng: any;
@@ -18,46 +18,22 @@ export class MapPage {
   constructor( fsAPI:FourSquareAPI ) {    
     console.log("in constructor")
     this.venues = [];
-    // this is working !!! Cool and se easy YAY!
-    // fsAPI.getVenues2().subscribe(
-    //         result => {
-    //             var venueResults = result.response.venues;
-    //             for(var i = 0; i < venueResults.length; i++) {
-    //                 var venue: VenueInfo = {
-    //                     id: venueResults[i].id,
-    //                     name: venueResults[i].name,
-    //                     crossStreet: venueResults[i].location.crossStreet,
-    //                     lat: venueResults[i].location.lat,
-    //                     lng: venueResults[i].location.lng,                        
-    //                 }             
-    //                 this.venues.push(venue);            
-    //             }
-    //             console.log(this.venues); 
-    //             this.createMarkers();               
-    //          }
-    //      );	
     let options = {timeout: 10000, enableHighAccuracy: true};
     navigator.geolocation.getCurrentPosition(
         (position) => { 
             this.lat = position.coords.latitude;
             this.lng = position.coords.longitude;
-          fsAPI.getVenues3(this.lat, this.lng).subscribe(
-            result => {
-                var venueResults = result.response.venues;
-                for(var i = 0; i < venueResults.length; i++) {
-                    var venue: VenueInfo = {
-                        id: venueResults[i].id,
-                        name: venueResults[i].name,
-                        crossStreet: venueResults[i].location.crossStreet,
-                        lat: venueResults[i].location.lat,
-                        lng: venueResults[i].location.lng,                        
-                    }             
-                    this.venues.push(venue);            
+            fsAPI.searchLocalBreweries(this.lat, this.lng).subscribe(
+                result => {
+                    var venueResults = result.response.venues;
+                    for(var i = 0; i < venueResults.length; i++) {
+                        var venue = new Venue(venueResults[i]);         
+                        this.venues.push(venue);            
+                    }
+                    // console.log(this.venues); 
+                    this.createMarkers();               
                 }
-                console.log(this.venues); 
-                this.createMarkers();               
-             }
-          );
+            );
       },
       (error) => {
           console.log(error);
