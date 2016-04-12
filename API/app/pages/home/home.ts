@@ -83,8 +83,7 @@ export class HomePage {
     locationClosest2() {
         var lat = this.lat;
         var lng = this.lng;
-        for(var i = 0; i < this.venues.length; i ++) {
-            
+        for(var i = 0; i < this.venues.length; i ++) {     
             this.venues = this.venues.sort(function(a,b) {   
                 // doesnt know this inhere?    
                 // userLat, locationLat, userLng, locationLng    

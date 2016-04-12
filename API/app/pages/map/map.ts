@@ -61,10 +61,60 @@ export class MapPage {
               zoom: 15,
               mapTypeId: google.maps.MapTypeId.ROADMAP
           }
- 
-          this.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-      },
- 
+          
+          this.map = new google.maps.Map(document.getElementById("map"), mapOptions);       
+          var input: any =  document.getElementById('pac-input');
+            
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', this.map);
+        autocomplete.setTypes([]);
+        
+        var infowindow = new google.maps.InfoWindow();   
+        var map = this.map;
+        
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+          map: map,
+          position: latLng,         
+        });
+        autocomplete.addListener('place_changed', function() {
+            infowindow.close();
+            marker.setVisible(false);
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                window.alert("Autocomplete's returned place contains no geometry");
+                return;
+            }
+
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                window.alert("Autocomplete's returned place contains no geometry");
+                return;
+            }
+
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(15);  // Why 17? Because it looks good.
+            }
+            
+            // reposition ICON
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+
+            var address = '';
+            if (place.address_components) {
+                address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+        });      
+      }, 
       (error) => {
           console.log(error);
       }, options
@@ -92,8 +142,11 @@ export class MapPage {
     var pos = new google.maps.LatLng(lat,lng);
     var marker = new google.maps.Marker({
         position: pos,
-        title: title
+        title: title,
+        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
     });   
     return marker; 
-  }
+  } 
 }
+
+
