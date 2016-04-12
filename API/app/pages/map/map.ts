@@ -73,6 +73,7 @@ export class MapPage {
         var map = this.map;
         
         var infowindow = new google.maps.InfoWindow();
+        infowindow.setContent('<div><strong>' + position.coords.latitude + '</strong><br>' + position.coords.longitude);
         var marker = new google.maps.Marker({
           map: map,
           position: latLng,         
@@ -113,7 +114,11 @@ export class MapPage {
                 ].join(' ');
             }
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-        });      
+        });   
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+           
       }, 
       (error) => {
           console.log(error);
