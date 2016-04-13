@@ -1,5 +1,10 @@
 
 .map-page{ 
+    
+    .menu {
+        z-index: 10;
+    }
+    
     #map {
         width: 100%;
         height: 100%;
@@ -45,5 +50,32 @@
       .pac-container {
         font-family: Roboto;
       }
+      
+      #custom-window {
+          p {
+              font-weight: bold;
+          }
+          
+          .closeBtn {
+              position: absolute;
+              top: 0;
+              right: 0;
+              padding: 10px;
+          }
+      }
+}
+
+.info-window {
+    .left-column {
+        width: 60%;
+        display: block;
+    }
+    
+    .right-column {
+        display: block;
+        float: right;   
+        width: 40%;
+        
+    }
 }
 

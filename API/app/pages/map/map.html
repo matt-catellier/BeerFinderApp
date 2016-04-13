@@ -3,7 +3,14 @@
 </ion-navbar>
 
 <ion-content class="map-page">
+    <ion-menu side="left" [content]="content" class="menu">
+            <div id="custom-window">
+            </div>       
+    </ion-menu>
+    <ion-nav id="nav" #content></ion-nav>
+
     <input id="pac-input" class="controls" type="text"
         placeholder="Enter a location">
-    <div id="map"> </div>  
+    <div id="map"> </div> 
+    
 </ion-content>
